@@ -1,0 +1,13 @@
+<ng-container *ngIf="roles$ | async as roleResponse">
+  <app-usertable
+    [users]="(users$ | async) || []"
+    [loading]="loading"
+    [roles]="roleResponse || []"
+    [currentPage]="currentPage"
+    [pageSize]="pageSize"
+    [totalCount]="totalCount"
+    (deleteUser)="onDelete($event)"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  ></app-usertable>
+</ng-container>

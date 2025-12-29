@@ -1,0 +1,28 @@
+<app-page-title
+  title="Dashboard"
+  titleLink="/userRolePermission/dashboard"
+  subtitle="Admin Dashboard"
+></app-page-title>
+
+<div class="row">
+  @for (card of dashboardCards; track $index) {
+    <div class="col-xl-4 col-lg-6 col-md-6">
+      <a [routerLink]="card.path" class="text-decoration-none">
+        <div class="card card-hover">
+          <div class="card-body overflow-hidden position-relative">
+            <iconify-icon
+              [icon]="card.icon"
+              class="fs-36 text-{{ card.iconColor }}"
+            ></iconify-icon>
+            <h3 class="mb-0 fw-bold mt-3 mb-1">{{ card.title }}</h3>
+            <p class="text-muted">Manage {{ card.title }} configurations</p>
+            <span class="badge fs-12 badge-soft-{{ card.badgeColor }}">
+              <i class="ti ti-arrow-right"></i> View
+            </span>
+            <i class="{{ card.badgeIcon }} widget-icon"></i>
+          </div>
+        </div>
+      </a>
+    </div>
+  }
+</div>

@@ -1,0 +1,62 @@
+<app-page-title
+  title="Dashboard"
+  titleLink="/userRolePermission/dashboard"
+  [subtitle]="'Role Management'"
+/>
+<div class="card">
+  <div class="card-body">
+    <div
+      class="card-header d-flex align-items-right justify-content-between gap-2"
+    >
+      <h4 class="card-title flex-grow-1"></h4>
+      <button *hasPermission="'RoleManagement:Add'" class="btn btn-sm btn-soft-primary" (click)="onCreate()">
+        <i class="bx bx-plus"></i> Add Role
+      </button>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-centered">
+        <thead class="table-light">
+          <tr>
+            <th class="text-muted py-1">ID</th>
+            <th class="text-muted py-1">Role Name</th>
+            <th class="text-muted py-1">Status</th>
+            <th class="text-muted py-1">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let role of roles; trackBy: trackById">
+            <td>{{ role.id }}</td>
+            <td>{{ role.name }}</td>
+            <td>{{ getStatusText(role.status) }}</td>
+            <td>
+              <button
+                *hasPermission="'RoleManagement:View'"
+                class="btn btn-sm bg-transparent text-danger"
+                (click)="onView(role)"
+                title="View"
+              >
+                <i class="bx bx-show"></i>
+              </button>
+              <button
+                *hasPermission="'RoleManagement:Update'"
+                class="btn btn-sm bg-transparent text-secondary"
+                (click)="onEdit(role)"
+                title="Edit"
+              >
+                <i class="bx bx-edit"></i>
+              </button>
+              <button
+                *hasPermission="'RoleManagement:Delete'"
+                class="btn btn-sm bg-transparent text-danger"
+                (click)="onDelete(role.id)"
+                title="Delete"
+              >
+                <i class="bx bx-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

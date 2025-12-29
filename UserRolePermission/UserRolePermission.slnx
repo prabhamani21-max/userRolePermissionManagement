@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="UserRolePermission.Common/UserRolePermission.Common.csproj" />
+  <Project Path="UserRolePermission.Repository/UserRolePermission.Repository.csproj" />
+  <Project Path="UserRolePermission/UserRolePermission.csproj" />
+  <Project Path="UserRolePermissionService/UserRolePermission.Service.csproj" />
+</Solution>

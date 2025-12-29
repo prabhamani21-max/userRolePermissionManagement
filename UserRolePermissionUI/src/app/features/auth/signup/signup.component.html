@@ -1,0 +1,409 @@
+<div class="row justify-content-center">
+  <div class="col-xl-5">
+    <div class="card auth-card">
+      <div class="card-body px-3 py-5">
+        <div class="mx-auto mb-4 text-center auth-logo">
+          <!-- Logo placeholder - replace with actual logo -->
+        </div>
+
+        <h1 class="fw-bold text-center fs-20">Welcome to SalexiHR</h1>
+        <h2 class="fw-bold text-center fs-18">Sign Up</h2>
+        <p class="text-muted text-center mt-1 mb-4">
+          New to our platform? Sign up now! It only takes a minute.
+        </p>
+
+        <div class="px-4">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <!-- Personal Information Section -->
+            <div class="mb-3">
+              <label class="form-label" for="name"
+                >Full Name <span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                id="name"
+                formControlName="name"
+                class="form-control"
+                placeholder="Enter your full name"
+              />
+              <div
+                *ngIf="
+                  registerForm.get('name')?.invalid &&
+                  (registerForm.get('name')?.dirty ||
+                    registerForm.get('name')?.touched)
+                "
+                class="text-danger"
+              >
+                <small *ngIf="registerForm.get('name')?.errors?.['required']"
+                  >Full name is required</small
+                >
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="email"
+                >Email <span class="text-danger">*</span></label
+              >
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                placeholder="Enter your email"
+                [class.is-invalid]="
+                  (registerForm.get('email')?.invalid &&
+                    registerForm.get('email')?.touched) ||
+                  registerForm.get('email')?.errors?.['emailExists']
+                "
+              />
+              <div
+                *ngIf="
+                  registerForm.get('email')?.invalid &&
+                  (registerForm.get('email')?.dirty ||
+                    registerForm.get('email')?.touched)
+                "
+                class="text-danger"
+              >
+                <small *ngIf="registerForm.get('email')?.errors?.['required']"
+                  >Email is required</small
+                >
+                <small *ngIf="registerForm.get('email')?.errors?.['email']"
+                  >Please enter a valid email</small
+                >
+              </div>
+              <div
+                *ngIf="registerForm.get('email')?.errors?.['emailExists']"
+                class="text-danger"
+              >
+                <small>Email already registered! Please Login</small>
+              </div>
+              <div
+                *ngIf="registerForm.get('email')?.pending"
+                class="text-muted"
+              >
+                <small>Checking email availability...</small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="contactNo"
+                >Contact Number <span class="text-danger">*</span></label
+              >
+              <input
+                type="tel"
+                id="contactNo"
+                formControlName="contactNo"
+                class="form-control"
+                placeholder="Enter your phone number"
+                [class.is-invalid]="
+                  (registerForm.get('contactNo')?.invalid &&
+                    registerForm.get('contactNo')?.touched) ||
+                  registerForm.get('contactNo')?.errors?.['contactExists']
+                "
+              />
+              <div
+                *ngIf="
+                  registerForm.get('contactNo')?.invalid &&
+                  (registerForm.get('contactNo')?.dirty ||
+                    registerForm.get('contactNo')?.touched)
+                "
+                class="text-danger"
+              >
+                <small
+                  *ngIf="registerForm.get('contactNo')?.errors?.['required']"
+                  >Contact number is required</small
+                >
+                <small
+                  *ngIf="registerForm.get('contactNo')?.errors?.['pattern']"
+                  >Please enter a valid phone number</small
+                >
+                <small
+                  *ngIf="
+                    registerForm.get('contactNo')?.errors?.['contactExists']
+                  "
+                  >Contact number already registered</small
+                >
+              </div>
+              <div *ngIf="checkingContact" class="text-muted">
+                <small>Checking contact number availability...</small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="dob"
+                >Date of Birth <span class="text-danger">*</span></label
+              >
+              <input
+                type="date"
+                id="dob"
+                formControlName="dob"
+                class="form-control"
+              />
+              <div
+                *ngIf="
+                  registerForm.get('dob')?.invalid &&
+                  (registerForm.get('dob')?.dirty ||
+                    registerForm.get('dob')?.touched)
+                "
+                class="text-danger"
+              >
+                <small *ngIf="registerForm.get('dob')?.errors?.['required']"
+                  >Date of birth is required</small
+                >
+              </div>
+            </div>
+
+            <!-- Dropdown Selections -->
+            <div class="mb-3">
+              <label class="form-label" for="gender"
+                >Gender <span class="text-danger">*</span></label
+              >
+              <select id="gender" formControlName="gender" class="form-select">
+                <option value="" disabled selected>Select Gender</option>
+                <option value="1">Male</option>
+                <option value="0">Female</option>
+              </select>
+              <div
+                *ngIf="
+                  registerForm.get('gender')?.invalid &&
+                  (registerForm.get('gender')?.dirty ||
+                    registerForm.get('gender')?.touched)
+                "
+                class="text-danger"
+              >
+                <small *ngIf="registerForm.get('gender')?.errors?.['required']"
+                  >Gender is required</small
+                >
+              </div>
+            </div>
+
+            <!-- Password Section -->
+            <div class="mb-3">
+              <label class="form-label" for="password"
+                >Password <span class="text-danger">*</span></label
+              >
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                placeholder="Min 9 chars with 1 uppercase & 1 special character"
+              />
+              <div
+                *ngIf="
+                  registerForm.get('password')?.invalid &&
+                  (registerForm.get('password')?.dirty ||
+                    registerForm.get('password')?.touched)
+                "
+                class="text-danger"
+              >
+                <small
+                  *ngIf="registerForm.get('password')?.errors?.['required']"
+                  >Password is required</small
+                >
+                <small
+                  *ngIf="
+                    registerForm.get('password')?.errors?.['passwordStrength']
+                  "
+                >
+                  Password must be at least 9 characters with at least one
+                  uppercase and one special character
+                </small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="confirmPassword"
+                >Confirm Password <span class="text-danger">*</span></label
+              >
+              <input
+                type="password"
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                class="form-control"
+                placeholder="Confirm your password"
+              />
+              <div
+                *ngIf="
+                  registerForm.get('confirmPassword')?.invalid &&
+                  (registerForm.get('confirmPassword')?.dirty ||
+                    registerForm.get('confirmPassword')?.touched)
+                "
+                class="text-danger"
+              >
+                <small
+                  *ngIf="
+                    registerForm.get('confirmPassword')?.errors?.['required']
+                  "
+                  >Please confirm your password</small
+                >
+              </div>
+              <div
+                *ngIf="
+                  registerForm.hasError('mismatch') &&
+                  registerForm.get('confirmPassword')?.dirty
+                "
+                class="text-danger"
+              >
+                <small>Passwords do not match</small>
+              </div>
+            </div>
+
+            <!-- Update the file uploader section -->
+            <!-- <div class="mb-3">
+              <label class="form-label" for="profileImage">Profile Image</label>
+              <div class="mb-3">
+                <div
+                  class="border rounded p-3 text-center"
+                  style="cursor: pointer; background-color: #f8f9fa"
+                  (click)="fileInput.click()"
+                 >
+                  <input
+                    #fileInput
+                    type="file"
+                    id="profileImage"
+                    accept="image/jpeg,image/png"
+                    (change)="onFileSelected($event)"
+                    class="d-none"
+                  />
+
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      justify-content: center;
+                      min-height: 100px;
+                    "
+                  >
+                    <i
+                      class="bx bx-cloud-upload"
+                      style="
+                        font-size: 2rem;
+                        color: #6c757d;
+                        margin-bottom: 0.5rem;
+                      "
+                    ></i>
+
+                    <div *ngIf="!selectedFileName; else fileSelected">
+                      <div class="text-muted mb-1">
+                        Drop image here or click to upload
+                      </div>
+                      <small class="text-muted"
+                        >Supports JPG, PNG (Max 2MB)</small
+                      >
+                    </div>
+
+                    <ng-template #fileSelected>
+                      <div
+                        style="display: flex; align-items: center; gap: 0.5rem"
+                      >
+                        <i
+                          class="bx bx-image-alt text-primary"
+                          style="font-size: 1.5rem"
+                        ></i>
+                        <div style="text-align: left">
+                          <div class="text-primary">{{ selectedFileName }}</div>
+                          <small class="text-muted">Click to change</small>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+
+                
+                <div
+                  *ngIf="registerForm.get('profileImage')?.errors"
+                  class="text-danger mt-2"
+                >
+                  <small
+                    *ngIf="
+                      registerForm.get('profileImage')?.hasError('invalidType')
+                    "
+                  >
+                    Only JPG and PNG images are allowed
+                  </small>
+                  <small
+                    *ngIf="
+                      registerForm.get('profileImage')?.hasError('maxSize')
+                    "
+                    class="d-block"
+                  >
+                    Image size should not exceed 2MB
+                  </small>
+                  <small
+                    *ngIf="
+                      registerForm.get('profileImage')?.hasError('minSize')
+                    "
+                    class="d-block"
+                  >
+                    Image should be at least 10KB
+                  </small>
+                </div>
+              </div>
+            </div> -->
+
+            <!-- Terms and Conditions -->
+            <div class="mb-3">
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  formControlName="terms"
+                  class="form-check-input"
+                />
+                <label class="form-check-label" for="terms"
+                  >I accept Terms and Conditions
+                </label>
+              </div>
+              <div
+                *ngIf="
+                  registerForm.get('terms')?.invalid &&
+                  (registerForm.get('terms')?.dirty ||
+                    registerForm.get('terms')?.touched)
+                "
+                class="text-danger"
+              >
+                <small *ngIf="registerForm.get('terms')?.errors?.['required']"
+                  >You must accept the terms and conditions</small
+                >
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+              {{ errorMessage }}
+            </div>
+
+            <!-- Success Message -->
+            <div *ngIf="successMessage" class="alert alert-success mb-3">
+              {{ successMessage }}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mb-1 text-center d-grid">
+              <button
+                class="btn btn-primary"
+                type="submit"
+                [disabled]="registerForm.invalid || isLoading"
+              >
+                <span
+                  *ngIf="isLoading"
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                {{ isLoading ? "Registering..." : "Sign Up" }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-white mb-0 text-center">
+      Already have an account?
+      <a href="/userRolePermission/auth/sign-in" class="text-white fw-bold ms-1">Sign In</a>
+    </p>
+  </div>
+</div>

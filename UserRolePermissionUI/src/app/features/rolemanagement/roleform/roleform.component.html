@@ -1,0 +1,87 @@
+<app-page-title
+  [title]="'Role Dashboard'"
+  titleLink="userRolePermission/dashboard/role"
+  [subtitle]="isViewing ? 'View Role' : isEditMode ? 'Edit Role' : 'Add Role'"
+></app-page-title>
+
+<div style="max-width: 800px">
+  <div class="card">
+    <div class="card-body" *ngIf="!isLoading; else loading">
+      <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Name -->
+            <div class="form-group">
+              <label for="name"
+                >Role Name<span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                id="name"
+                class="form-control"
+                formControlName="name"
+                placeholder="Enter role name"
+                [ngClass]="{ 'is-invalid': isInvalid('name') }"
+              />
+              <div *ngIf="isInvalid('name')" class="invalid-feedback">
+                Role name is required and must be at least 3 characters.
+              </div>
+            </div>
+          </div>
+          <!-- Status -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="status"
+                >Status<span class="text-danger">*</span></label
+              >
+              <select
+                id="status"
+                class="form-control"
+                formControlName="status"
+                [ngClass]="{ 'is-invalid': isInvalid('status') }"
+              >
+                <option ngValue="[null]" disabled hidden>
+                  --Select Status--
+                </option>
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+              </select>
+              <div *ngIf="isInvalid('status')" class="invalid-feedback">
+                Status is required.
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Buttons -->
+        <div class="mt-4" *ngIf="!isViewing">
+          <button
+            type="submit"
+            class="btn btn-primary me-2"
+            [disabled]="roleForm.invalid || isSubmitting"
+          >
+            <span
+              *ngIf="isSubmitting"
+              class="spinner-border spinner-border-sm me-1"
+            ></span>
+            {{ submitButtonText }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onCancel()"
+            [disabled]="isSubmitting"
+          >
+            Cancel
+          </button>
+        </div>
+        <div *ngIf="isViewing">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+    <!-- Loading Spinner -->
+    <ng-template #loading></ng-template>
+  </div>
+</div>

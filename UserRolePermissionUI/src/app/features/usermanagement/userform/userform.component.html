@@ -1,0 +1,280 @@
+<app-page-title
+  [title]="'User Dashboard'"
+  titleLink="/userRolePermission/dashboard/user"
+  [subtitle]="isViewing ? 'View User' : isEditMode ? 'Edit User' : 'Add User'"
+></app-page-title>
+
+<div style="max-width: 800px">
+  <div class="card">
+    <div class="card-body" *ngIf="!isLoading; else loading">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Name -->
+            <div class="form-group">
+              <label for="name"
+                >Full Name<span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                id="name"
+                class="form-control"
+                formControlName="name"
+                placeholder="Enter your full name"
+                [ngClass]="{ 'is-invalid': isInvalid('name') }"
+              />
+              <div *ngIf="isInvalid('name')" class="invalid-feedback">
+                Name is required.
+              </div>
+            </div>
+          </div>
+          <!-- Email -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="email">Email<span class="text-danger">*</span></label>
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                formControlName="email"
+                placeholder="Enter your email"
+                [class.is-invalid]="
+                  userForm.get('email')?.invalid &&
+                  userForm.get('email')?.touched
+                "
+              />
+              <div
+                *ngIf="userForm.get('email')?.errors?.['required']"
+                class="invalid-feedback"
+              >
+                Email is required.
+              </div>
+              <div
+                *ngIf="userForm.get('email')?.errors?.['email']"
+                class="invalid-feedback"
+              >
+                Enter a valid email.
+              </div>
+              <div
+                *ngIf="userForm.get('email')?.errors?.['emailExists']"
+                class="text-danger mt-1"
+              >
+                <small>Email already registered</small>
+              </div>
+              <div *ngIf="userForm.get('email')?.pending" class="text-muted">
+                <small>Checking email availability...</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Contact No -->
+            <div class="form-group mt-3">
+              <label for="contactNo"
+                >Contact Number<span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                id="contactNo"
+                class="form-control"
+                formControlName="contactNo"
+                placeholder="Enter contact number"
+                [class.is-invalid]="
+                  userForm.get('contactNo')?.invalid &&
+                  userForm.get('contactNo')?.touched
+                "
+              />
+              <div
+                *ngIf="userForm.get('contactNo')?.errors?.['required']"
+                class="invalid-feedback"
+              >
+                Contact number is required.
+              </div>
+              <div
+                *ngIf="userForm.get('contactNo')?.errors?.['pattern']"
+                class="invalid-feedback"
+              >
+                Enter a valid number (10–15 digits).
+              </div>
+              <div
+                *ngIf="userForm.get('contactNo')?.errors?.['contactExists']"
+                class="text-danger mt-1"
+              >
+                <small>Contact number already registered</small>
+              </div>
+              <div
+                *ngIf="userForm.get('contactNo')?.pending"
+                class="text-muted"
+              >
+                <small>Checking contact number availability...</small>
+              </div>
+            </div>
+          </div>
+          <!-- DOB -->
+          <div class="col-md-6">
+            <div class="form-group mt-3">
+              <label for="dob"
+                >Date of Birth<span class="text-danger">*</span></label
+              >
+              <input
+                type="date"
+                id="dob"
+                class="form-control"
+                formControlName="dob"
+                [ngClass]="{ 'is-invalid': isInvalid('dob') }"
+              />
+              <div *ngIf="isInvalid('dob')" class="invalid-feedback">
+                Date of birth is required.
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Gender -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group mt-3">
+              <label for="gender"
+                >Gender<span class="text-danger">*</span></label
+              >
+              <select
+                id="gender"
+                class="form-control"
+                formControlName="gender"
+                [ngClass]="{ 'is-invalid': isInvalid('gender') }"
+              >
+                <option value="" disabled hidden>--Select Gender--</option>
+                <option [ngValue]="1">Male</option>
+                <option [ngValue]="0">Female</option>
+              </select>
+              <div *ngIf="isInvalid('gender')" class="invalid-feedback">
+                Gender is required.
+              </div>
+            </div>
+          </div>
+          <!-- Role -->
+          <div class="col-md-6">
+            <div class="form-group mt-3">
+              <label for="roleId">Role<span class="text-danger">*</span></label>
+              <select
+                id="roleId"
+                class="form-control"
+                formControlName="roleId"
+                [ngClass]="{ 'is-invalid': isInvalid('roleId') }"
+              >
+                <option value="" disabled hidden>--Select Role--</option>
+                <option *ngFor="let role of roles$ | async" [value]="role.id">
+                  {{ role.name }}
+                </option>
+              </select>
+              <div *ngIf="isInvalid('roleId')" class="invalid-feedback">
+                Role is required.
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Password -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group mt-3" *ngIf="!isEditMode && !isViewing">
+              <label for="password"
+                >Password<span class="text-danger">*</span></label
+              >
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                formControlName="password"
+                placeholder="Min 9 chars with 1 uppercase & 1 special character"
+              />
+              <div
+                *ngIf="
+                  userForm.get('password')?.invalid &&
+                  (userForm.get('password')?.dirty ||
+                    userForm.get('password')?.touched)
+                "
+                class="text-danger"
+              >
+                <small *ngIf="userForm.get('password')?.errors?.['required']"
+                  >Password is required</small
+                >
+                <small
+                  *ngIf="userForm.get('password')?.errors?.['passwordStrength']"
+                >
+                  Password must be at least 9 characters with at least one
+                  uppercase and one special character
+                </small>
+              </div>
+            </div>
+          </div>
+          <!-- Confirm Password -->
+          <div class="col-md-6">
+            <div class="form-group mt-3" *ngIf="!isEditMode && !isViewing">
+              <label for="confirmPassword"
+                >Confirm Password<span class="text-danger">*</span></label
+              >
+              <input
+                type="password"
+                id="confirmPassword"
+                class="form-control"
+                placeholder="Confirm your password"
+                formControlName="confirmPassword"
+              />
+              <div
+                *ngIf="
+                  userForm.get('confirmPassword')?.invalid &&
+                  (userForm.get('confirmPassword')?.dirty ||
+                    userForm.get('confirmPassword')?.touched)
+                "
+                class="text-danger"
+              >
+                <small
+                  *ngIf="userForm.get('confirmPassword')?.errors?.['required']"
+                  >Please confirm your password</small
+                >
+              </div>
+              <div
+                *ngIf="
+                  userForm.hasError('mismatch') &&
+                  userForm.get('confirmPassword')?.dirty
+                "
+                class="text-danger"
+              >
+                <small>Passwords do not match</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Buttons -->
+        <div class="mt-4" *ngIf="!isViewing">
+          <button
+            type="submit"
+            class="btn btn-primary me-2"
+            [disabled]="userForm.invalid || isSubmitting"
+          >
+            <span
+              *ngIf="isSubmitting"
+              class="spinner-border spinner-border-sm me-1"
+            ></span>
+            {{ submitButtonText }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onCancel()"
+            [disabled]="isSubmitting"
+          >
+            Cancel
+          </button>
+        </div>
+        <div *ngIf="isViewing">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+    <!-- Loading Spinner -->
+    <ng-template #loading></ng-template>
+  </div>
+</div>

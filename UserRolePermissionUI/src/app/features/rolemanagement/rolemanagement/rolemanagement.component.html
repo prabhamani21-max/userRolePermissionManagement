@@ -1,0 +1,7 @@
+<ng-container *ngIf="roles$ | async as roleResponse">
+  <app-roletable
+    [roles]="roleResponse || []"
+    [loading]="loading"
+    (deleteRole)="onDelete($event)"
+  ></app-roletable>
+</ng-container>

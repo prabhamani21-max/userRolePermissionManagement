@@ -1,0 +1,70 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Role Permission Management</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="roleForm" (ngSubmit)="savePermissions()">
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label for="roleSelect" class="form-label">Select Role</label>
+                <select
+                  id="roleSelect"
+                  class="form-select"
+                  formControlName="roleId"
+                  (change)="onRoleChange()"
+                >
+                  <option value=null disabled hidden>Choose a role...</option>
+                  <option *ngFor="let role of roles" [value]="role.id">
+                    {{ role.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div *ngIf="loading" class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+
+            <div *ngIf="!loading && selectedRoleId">
+              <div *ngFor="let screenWithActions of screensWithActions" class="mb-4">
+                <h5>{{ screenWithActions.screen.screenName }}</h5>
+                <div class="row">
+                  <div *ngFor="let action of screenWithActions.actions" class="col-md-3 mb-2">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        [id]="'action-' + action.id"
+                        [checked]="screenWithActions.selectedActions.includes(action.id)"
+                        (change)="onActionToggle(screenWithActions, action.id)"
+                      />
+                      <label class="form-check-label" [for]="'action-' + action.id">
+                        {{ action.actionName }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-end">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="saving"
+                >
+                  <span *ngIf="saving" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Save Permissions
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
