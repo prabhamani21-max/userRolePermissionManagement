@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace UserRolePermission.Common.Models
@@ -18,7 +19,9 @@ namespace UserRolePermission.Common.Models
         public bool IsTitle { get; set; } = false;
         public bool IsActive { get; set; } = true;
         public bool IsDefaultDashboard { get; set; } = false;
+        [JsonIgnore]
         public DateTimeOffset CreatedDate { get; set; }
+        [JsonIgnore]
         public DateTimeOffset? UpdatedDate { get; set; }
         //public long CreatedBy { get; set; }
         //public long? UpdatedBy { get; set; }

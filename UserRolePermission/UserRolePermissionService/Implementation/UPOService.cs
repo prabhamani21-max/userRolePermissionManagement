@@ -15,16 +15,20 @@ namespace UserRolePermission.Service.Implementation
     {
         private readonly IUPORepository _repository;
         private readonly IMapper _mapper;
+        private readonly IRolePermissionService _rolePermissionService;
 
-        public UPOService(IUPORepository repository, IMapper mapper)
+        public UPOService(IUPORepository repository, IMapper mapper, IRolePermissionService rolePermissionService)
         {
             _repository = repository;
             _mapper = mapper;
+            _rolePermissionService = rolePermissionService;
         }
 
         public async Task<long> CreateUserPermissionOverrideAsync(UserPermissionOverride userPermissionOverride)
         {
-            return await _repository.CreateUserPermissionOverrideAsync(userPermissionOverride);
+            var result = await _repository.CreateUserPermissionOverrideAsync(userPermissionOverride);
+            await _rolePermissionService.InvalidatePermissionsCacheAsync();
+            return result;
         }
 
         public async Task<Pagination<UserPermissionOverride>> GetAllUserPermissionOverridesAsync(int? statusId, int pageNumber = 1, int pageSize = 10)
@@ -39,12 +43,16 @@ namespace UserRolePermission.Service.Implementation
 
         public async Task<UserPermissionOverride> UpdateUserPermissionOverrideAsync(UserPermissionOverride userPermissionOverride)
         {
-            return await _repository.UpdateUserPermissionOverrideAsync(userPermissionOverride);
+            var result = await _repository.UpdateUserPermissionOverrideAsync(userPermissionOverride);
+            await _rolePermissionService.InvalidatePermissionsCacheAsync();
+            return result;
         }
 
         public async Task<(bool Success, string Message)> DeleteUserPermissionOverrideAsync(long id)
         {
-            return await _repository.DeleteUserPermissionOverrideAsync(id);
+            var result = await _repository.DeleteUserPermissionOverrideAsync(id);
+            await _rolePermissionService.InvalidatePermissionsCacheAsync();
+            return result;
         }
     }
 }

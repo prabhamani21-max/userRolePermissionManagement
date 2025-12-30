@@ -9,5 +9,6 @@ namespace UserRolePermission.Service.Interface
         Task PublishUserAdded(User user);
         Task PublishUserUpdated(User user);
         Task PublishUserDeleted(long userId);
+        Task PublishPermissionsInvalidated();
     }
 }

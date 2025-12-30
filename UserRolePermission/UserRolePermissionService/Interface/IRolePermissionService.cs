@@ -12,5 +12,6 @@ namespace UserRolePermission.Service.Interface
         Task<RolePermission> UpdateRolePermissionAsync(RolePermission rolePermission);
         Task<(bool Success, string Message)> DeleteRolePermissionAsync(int id);
         Task<List<string>> GetEffectivePermissionsAsync(long userId);
+        Task InvalidatePermissionsCacheAsync();
     }
 }

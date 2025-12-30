@@ -73,8 +73,7 @@ namespace UserRolePermission.Controllers
             var menuStructure = _mapper.Map<MenuStructure>(menuStructureDto);
             menuStructure.CreatedDate = DateTimeOffset.UtcNow;
             var id = await _menuStructureService.CreateMenuStructureAsync(menuStructure);
-            return CreatedAtAction(nameof(GetById), new { id }, new { Id = id });
-            // Remove CreatedAtAction Here
+            return Ok(new { Id = id });
         }
 
         [Authorize] // Should ideally be [HasPermission("MenuManagement:Update")]

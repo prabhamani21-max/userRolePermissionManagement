@@ -13,18 +13,21 @@ namespace UserRolePermission.Service.Implementation
     {
         private readonly IRolePermissionRepository _rolePermissionRepository;
         private readonly IMemoryCache _cache;
+        private readonly IUserPublisherService _userPublisherService;
         private static int _cacheVersion = 0;
 
-        public RolePermissionService(IRolePermissionRepository rolePermissionRepository, IMemoryCache cache)
+        public RolePermissionService(IRolePermissionRepository rolePermissionRepository, IMemoryCache cache, IUserPublisherService userPublisherService)
         {
             _rolePermissionRepository = rolePermissionRepository;
             _cache = cache;
+            _userPublisherService = userPublisherService;
         }
 
         public async Task<int> CreateRolePermissionAsync(RolePermission rolePermission)
         {
             var result = await _rolePermissionRepository.CreateRolePermissionAsync(rolePermission);
             Interlocked.Increment(ref _cacheVersion);
+            await _userPublisherService.PublishPermissionsInvalidated();
             return result;
         }
 
@@ -42,6 +45,7 @@ namespace UserRolePermission.Service.Implementation
         {
             var result = await _rolePermissionRepository.UpdateRolePermissionAsync(rolePermission);
             Interlocked.Increment(ref _cacheVersion);
+            await _userPublisherService.PublishPermissionsInvalidated();
             return result;
         }
 
@@ -49,6 +53,7 @@ namespace UserRolePermission.Service.Implementation
         {
             var result = await _rolePermissionRepository.DeleteRolePermissionAsync(id);
             Interlocked.Increment(ref _cacheVersion);
+            await _userPublisherService.PublishPermissionsInvalidated();
             return result;
         }
 
@@ -69,6 +74,12 @@ namespace UserRolePermission.Service.Implementation
             _cache.Set(cacheKey, permissions, cacheEntryOptions);
 
             return permissions;
+        }
+
+        public async Task InvalidatePermissionsCacheAsync()
+        {
+            Interlocked.Increment(ref _cacheVersion);
+            await _userPublisherService.PublishPermissionsInvalidated();
         }
     }
 }

@@ -37,5 +37,11 @@ namespace UserRolePermission.SignalR
             await _hubContext.Clients.All.SendAsync("UserDeleted", userId);
             _logger.LogInformation("User deleted event published: {UserId}", userId);
         }
+
+        public async Task PublishPermissionsInvalidated()
+        {
+            await _hubContext.Clients.All.SendAsync("PermissionsInvalidated");
+            _logger.LogInformation("Permissions invalidated event published");
+        }
     }
 }
