@@ -65,7 +65,14 @@ export class SidebarComponent implements OnDestroy {
     }
     this.menuService.getSidebarMenu().subscribe({
       next: (menu) => {
-        this.menuItems = menu;
+        this.menuItems = menu.map(item => ({
+          ...item,
+          link: item.link && !item.link.startsWith('/') ? '/' + item.link : item.link,
+          subMenu: item.subMenu ? item.subMenu.map(sub => ({
+            ...sub,
+            link: sub.link && !sub.link.startsWith('/') ? '/' + sub.link : sub.link
+          })) : []
+        }));
         setTimeout(() => {
           this._activateMenu();
           this.scrollToActive();

@@ -66,7 +66,7 @@ export class DashboardComponent {
       icon: 'mdi:calendar-clock', // HR dashboard
       iconColor: 'warning',
       title: 'HR Dashboard',
-      path: '/userRolePermission/dashboard/hr',
+      path: '/userRolePermission/HR',
       badgeColor: 'warning',
       badgeIcon: 'bx bx-calendar',
     },

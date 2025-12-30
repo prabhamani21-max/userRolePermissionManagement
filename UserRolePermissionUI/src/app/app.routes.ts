@@ -3,6 +3,9 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { PrivateLayoutComponent } from './layouts/private-layout/private-layout.component'
 import { DashboardComponent } from './features/dashboard/dashboard.component'
 import { authGuard } from './core/guards/auth.guard'
+import { HRDashboardComponent } from './features/hrdashboard/hrdashboard.component'
+import { PermissionGuard } from './core/guards/permission.guard'
+import { Unauthorized } from './shared/components/unauthorized/unauthorized.component'
 
 export const routes: Routes = [
     // Redirect empty path to auth/sign-in (login page as default landing)
@@ -22,7 +25,8 @@ export const routes: Routes = [
   {
     path: 'userRolePermission/admin',
     component: PrivateLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, PermissionGuard],
+    data: { permissions: ['AdminDashboard:View'] },
     children: [
       {
         path: '',
@@ -30,11 +34,24 @@ export const routes: Routes = [
       },
     ],
   },
+    {
+    path: 'userRolePermission/HR',
+    component: PrivateLayoutComponent,
+    canActivate: [authGuard, PermissionGuard],
+    data: { permissions: ['HRDashboard:View'] },
+    children: [
+      {
+        path: '',
+        component: HRDashboardComponent,
+      },
+    ],
+  },
   // User Management
   {
-    path: 'admin/users',
+    path: 'userRolePermission/users',
     component: PrivateLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard,PermissionGuard],
+       data: { permissions: ['UserManagement:View'] },
     loadChildren: () => import('./features/usermanagement/usermanagement/usermanagement.module').then(m => m.UserManagementModule)
   },
   // Role Management
@@ -50,6 +67,11 @@ export const routes: Routes = [
     component: PrivateLayoutComponent,
     canActivate: [authGuard],
     loadChildren: () => import('./features/rolepermissionmanagement/rolepermissionmanagement/rolepermissionmanagement.routing.module').then(m => m.RolePermissionManagementRoutingModule)
+  },
+  // Unauthorized access route
+  {
+    path: 'userRolePermission/unauthorized',
+    component: Unauthorized,
   },
     // Fallback route - redirect to sign-in if no route matches
   {

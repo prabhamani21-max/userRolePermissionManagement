@@ -37,7 +37,7 @@ export class HasPermissionDirective implements OnInit {
       return;
     }
     const userPermissions = this.authService.getUserPermissions();
-    if (userPermissions.includes(action.id)) {
+    if (userPermissions.includes(action.id.toString())) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainer.clear();

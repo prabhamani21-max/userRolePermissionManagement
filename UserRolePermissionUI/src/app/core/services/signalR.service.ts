@@ -19,6 +19,9 @@ export class SignalRService {
   public fileUploaded = new Subject<any>();
   public fileDeleted = new Subject<any>();
 
+  // Permission management
+  public permissionsInvalidated = new Subject<void>();
+
   constructor(
     private cookieService: CookieService,
     private ngZone: NgZone,
@@ -31,7 +34,7 @@ export class SignalRService {
       return;
     }
 
-    const jwtToken = this.cookieService.get('SALEXIHR_AUTH_TOKEN');
+    const jwtToken = this.cookieService.get('UserRolePermission_AUTH_TOKEN');
     if (!jwtToken) {
       console.error('JWT token not found. Cannot start SignalR connection.');
       return;
@@ -39,7 +42,7 @@ export class SignalRService {
 
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.signalRUrl, {
-        accessTokenFactory: () => this.cookieService.get('SALEXIHR_AUTH_TOKEN'),
+        accessTokenFactory: () => this.cookieService.get('UserRolePermission_AUTH_TOKEN'),
         withCredentials: true,
       })
       .withAutomaticReconnect()
@@ -50,6 +53,7 @@ export class SignalRService {
       .then(() => {
         this.addUserListeners();
         this.addFileListeners();
+        this.addPermissionListeners();
         this.connectionEstablished.next(true);
       })
       .catch((err: string) =>
@@ -94,6 +98,14 @@ export class SignalRService {
 
       this.hubConnection.on('FileDeleted', (data: any) => {
         this.ngZone.run(() => this.fileDeleted.next(data));
+      });
+    }
+  }
+
+  private addPermissionListeners(): void {
+    if (this.hubConnection) {
+      this.hubConnection.on('PermissionsInvalidated', () => {
+        this.ngZone.run(() => this.permissionsInvalidated.next());
       });
     }
   }

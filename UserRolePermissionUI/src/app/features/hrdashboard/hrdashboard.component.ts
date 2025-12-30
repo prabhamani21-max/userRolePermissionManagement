@@ -18,6 +18,10 @@ import { RoleEnum } from '../../core/enums/role.enum';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HRDashboardComponent implements OnInit {
+  constructor(private router: Router) {}
+
+  titleLink: string = '/userRolePermission/HR';
+
   dashboardCards: any[] = [
     {
       icon: 'mdi:briefcase-check',
@@ -59,5 +63,9 @@ export class HRDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     // Initialization logic here
+  }
+
+  onCardClick(card: any): void {
+    this.router.navigate([card.path]);
   }
 }

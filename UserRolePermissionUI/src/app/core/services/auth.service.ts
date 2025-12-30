@@ -15,6 +15,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { Role } from '../models/role.model';
 import { CreateUser } from '../models/user.model';
 import { PermissionService } from './permission.service';
+import { ScreenService } from './screen.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -26,7 +27,7 @@ export class AuthenticationService {
   public readonly authSessionKey = 'UserRolePermission_AUTH_TOKEN';
   public readonly decodedTokenKey = 'userDetails';
   public readonly userPermissionsKey = 'userPermissions';
-  constructor(private http: HttpClient, private permissionService: PermissionService) {}
+  constructor(private http: HttpClient, private permissionService: PermissionService, private screenService: ScreenService) {}
 
   login(email: string, password: string) {
     return this.http
@@ -48,13 +49,17 @@ export class AuthenticationService {
                console.log('Parsed roleId:', roleId);
                if (!isNaN(roleId)) {
                  return this.permissionService.getAllRolePermissions(roleId, undefined, 1, 1, 1000).pipe(
-                   tap((permissionsResponse) => {
+                   switchMap((permissionsResponse) => {
                      console.log('Permissions response:', permissionsResponse);
-                     const permissions = permissionsResponse.items.map((p: any) => p.actionId);
-                     console.log('Mapped permissions:', permissions);
-                     localStorage.setItem(this.userPermissionsKey, JSON.stringify(permissions));
-                   }),
-                   map(() => response)
+                     return this.screenService.getAllScreenActions().pipe(
+                       map(() => {
+                         const permissions = permissionsResponse.items.map((p: any) => p.actionId.toString());
+                         console.log('Mapped permissions:', permissions);
+                         localStorage.setItem(this.userPermissionsKey, JSON.stringify(permissions));
+                         return response;
+                       })
+                     );
+                   })
                  );
                }
              }
@@ -142,9 +147,9 @@ getUserInformation(): DecodedToken | null {
   return data ? JSON.parse(data) as DecodedToken : null;
 }
 
-getUserPermissions(): number[] {
+getUserPermissions(): string[] {
   const data = localStorage.getItem(this.userPermissionsKey);
-  return data ? JSON.parse(data) as number[] : [];
+  return data ? JSON.parse(data) as string[] : [];
 }
   getTokenExpiration(): Date | null {
     const decoded = this.getUserInformation();

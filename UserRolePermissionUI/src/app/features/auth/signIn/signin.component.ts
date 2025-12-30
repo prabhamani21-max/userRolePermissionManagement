@@ -55,6 +55,17 @@ export class SigninComponent {
           const token = this.authService.token;
           const decodedToken = this.authService.getDecodedToken();
 
+          // Navigate based on role
+          if (decodedToken && decodedToken.roleId) {
+            const roleId = parseInt(decodedToken.roleId);
+            if (roleId === 3) {
+              this.router.navigate(['/userRolePermission/HR']);
+            } else {
+              this.router.navigate(['/userRolePermission/admin']);
+            }
+          } else {
+            this.router.navigate(['/userRolePermission/admin']);
+          }
         },
         error: (error) => {
           this.isLoading = false;
