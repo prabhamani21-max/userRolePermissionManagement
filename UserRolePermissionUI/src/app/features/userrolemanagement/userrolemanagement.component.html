@@ -1,0 +1,85 @@
+<div class="container-fluid">
+  <h2>User Role Management</h2>
+
+  <div class="d-flex justify-content-between mb-3">
+    <button class="btn btn-primary" (click)="openAddModal(addEditModal)">Add User Role</button>
+  </div>
+
+  <div class="table-responsive" *ngIf="!loading">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let userRole of userRoles">
+          <td>{{ userRole.id }}</td>
+          <td>{{ getUserName(userRole.userId) }}</td>
+          <td>{{ getRoleName(userRole.roleId) }}</td>
+          <td>{{ userRole.statusId === 1 ? 'Active' : 'Inactive' }}</td>
+          <td>
+            <button class="btn btn-sm btn-warning me-2" (click)="openEditModal(addEditModal, userRole)">Edit</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteUserRole(userRole.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-center" *ngIf="!loading && pagination.totalPages > 1">
+    <ngb-pagination
+      [(page)]="currentPage"
+      [pageSize]="pageSize"
+      [collectionSize]="pagination.totalCount"
+      (pageChange)="onPageChange($event)">
+    </ngb-pagination>
+  </div>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<ng-template #addEditModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ editMode ? 'Edit User Role' : 'Add User Role' }}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="userRoleForm">
+      <div class="mb-3">
+        <label for="userId" class="form-label">User</label>
+        <select class="form-control" id="userId" formControlName="userId" required>
+          <option value="">Select User</option>
+          <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="roleId" class="form-label">Role</label>
+        <select class="form-control" id="roleId" formControlName="roleId" required>
+          <option value="">Select Role</option>
+          <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="statusId" class="form-label">Status</label>
+        <select class="form-control" id="statusId" formControlName="statusId" required>
+          <option value="1">Active</option>
+          <option value="0">Inactive</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="saveUserRole()" [disabled]="userRoleForm.invalid">Save</button>
+  </div>
+</ng-template>

@@ -7,7 +7,7 @@ import { Role } from '../../core/models/role.model';
   standalone: true,
 })
 export class RoleNamePipe implements PipeTransform {
-  transform(roleId: number, roles: Role[] = []): string {
-    return roles.find((role) => role.id === roleId)?.name ?? 'Unknown';
+  transform(defaultRoleId: number, roles: Role[] = []): string {
+    return roles.find((role) => defaultRoleId === role.id)?.name ?? 'Unknown';
   }
 }

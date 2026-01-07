@@ -52,19 +52,19 @@ export class UserTableComponent{
 
   // 🔍 View user detail (navigate or open modal - you decide)
   onView(user: UserModel): void {
-    this.router.navigate([`userRolePermission/dashboard/user/view/${user.id}`]);
+    this.router.navigate([`userRolePermission/users/view/${user.id}`]);
   }
 
   // 📝 Edit user
   onEdit(user: UserModel): void {
-    this.router.navigate([`userRolePermission/dashboard/user/edit/${user.id}`], {
+    this.router.navigate([`userRolePermission/users/edit/${user.id}`], {
       state: { user },
     });
   }
 
   // ➕ Create user
   onCreate(): void {
-    this.router.navigate([`userRolePermission/dashboard/user/add`]);
+    this.router.navigate([`userRolePermission/users/add`]);
   }
   trackById(index: number, item: UserModel): number {
     return item.id;

@@ -2,9 +2,7 @@ export interface CreateUser {
   name: string;
   email: string;
   password: string;
-  roleId: number;
-  gender: number;
-  dob: string;
+  defaultRoleId: number;
   contactNo: string;
   profileImage?: string;
 }
@@ -15,7 +13,7 @@ export interface UserModel {
   name: string;
   email: string;
   password: string;
-  roleId: number;
+ defaultRoleId: number;
   gender: number;
   dob: string;
   contactNo: string;

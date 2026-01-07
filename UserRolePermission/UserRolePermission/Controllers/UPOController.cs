@@ -120,5 +120,13 @@ namespace UserRolePermission.Controllers
             _logger.LogInformation("User Permission Override deleted successfully with Id: {Id}", id);
             return Ok(new { Message = message });
         }
+
+        [HttpGet("GetUserEffectivePermissions/{userId}")]
+        public async Task<IActionResult> GetUserEffectivePermissions(long userId)
+        {
+            var effectivePermissions = await _upoService.GetUserEffectivePermissionsAsync(userId);
+            _logger.LogInformation("Fetched effective permissions for user Id: {UserId}", userId);
+            return Ok(effectivePermissions);
+        }
     }
 }

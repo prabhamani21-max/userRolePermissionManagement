@@ -12,5 +12,7 @@ export type MenuItem = {
   parentKey?: string;
   disabled?: boolean;
   roleId?: number[]; // Changed from roles to roleId with number[]
+  routePath?: string;
+  isDefaultDashboard?: boolean;
 };
 

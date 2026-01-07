@@ -32,6 +32,8 @@ namespace UserRolePermission.Middlewares
             CreateMap<RolePermission, RolePermissionDb>().ReverseMap();
             CreateMap<UserPermissionOverrideDto, UserPermissionOverride>().ReverseMap();
             CreateMap<UserPermissionOverride, UserPermissionOverrideDb>().ReverseMap();
+            CreateMap<UserRoleDto, UserRole>().ReverseMap();
+            CreateMap<UserRole, UserRoleDb>().ReverseMap();
         }
     }
 }

@@ -9,10 +9,10 @@ namespace UserRolePermission.Dto
         public string Label { get; set; }
         public string? Icon { get; set; }
         public string? RoutePath { get; set; }
-        public int SortOrder { get; set; } = 0;
         public string? ActionKey { get; set; }
         public bool IsTitle { get; set; } = false;
         public bool IsActive { get; set; } = true;
         public bool IsDefaultDashboard { get; set; } = false;
+
     }
 }

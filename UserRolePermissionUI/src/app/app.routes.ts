@@ -68,6 +68,20 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () => import('./features/rolepermissionmanagement/rolepermissionmanagement/rolepermissionmanagement.routing.module').then(m => m.RolePermissionManagementRoutingModule)
   },
+  // User Permission Management
+  {
+    path: 'userRolePermission/UPManagement',
+    component: PrivateLayoutComponent,
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/userpermissionmanagement/userpermissionmanagement.routing.module').then(m => m.UserPermissionManagementRoutingModule)
+  },
+  // User Role Management
+  {
+    path: 'userRolePermission/URManagement',
+    component: PrivateLayoutComponent,
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/userrolemanagement/userrolemanagement.routing.module').then(m => m.UserRoleManagementRoutingModule)
+  },
   // Unauthorized access route
   {
     path: 'userRolePermission/unauthorized',

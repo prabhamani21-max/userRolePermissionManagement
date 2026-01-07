@@ -16,12 +16,14 @@ namespace UserRolePermission.Service.Implementation
         private readonly IUPORepository _repository;
         private readonly IMapper _mapper;
         private readonly IRolePermissionService _rolePermissionService;
+        private readonly IUserService _userService;
 
-        public UPOService(IUPORepository repository, IMapper mapper, IRolePermissionService rolePermissionService)
+        public UPOService(IUPORepository repository, IMapper mapper, IRolePermissionService rolePermissionService, IUserService userService)
         {
             _repository = repository;
             _mapper = mapper;
             _rolePermissionService = rolePermissionService;
+            _userService = userService;
         }
 
         public async Task<long> CreateUserPermissionOverrideAsync(UserPermissionOverride userPermissionOverride)
@@ -53,6 +55,23 @@ namespace UserRolePermission.Service.Implementation
             var result = await _repository.DeleteUserPermissionOverrideAsync(id);
             await _rolePermissionService.InvalidatePermissionsCacheAsync();
             return result;
+        }
+
+        public async Task<List<int>> GetUserEffectivePermissionsAsync(long userId)
+        {
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null) return new List<int>();
+
+            var rolePermissions = await _rolePermissionService.GetAllRolePermissionsAsync(user.DefaultRoleId, null, null, 1, int.MaxValue);
+            var overrides = await _repository.GetAllUserPermissionOverridesAsync(null, 1, int.MaxValue);
+            var userOverrides = overrides.Items.Where(o => o.UserId == userId).ToList();
+            // What is ToHashSEt() here
+            var roleActionIds = rolePermissions.Items.Select(rp => rp.ActionId).ToHashSet();
+            var allowOverrides = userOverrides.Where(o => !o.IsDenied).Select(o => o.ActionId);
+            var denyOverrides = userOverrides.Where(o => o.IsDenied).Select(o => o.ActionId);
+
+            var effective = roleActionIds.Union(allowOverrides).Except(denyOverrides).ToList();
+            return effective;
         }
     }
 }

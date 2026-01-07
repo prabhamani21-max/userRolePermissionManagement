@@ -156,7 +156,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
         contactNo: user.contactNo,
         dob: user.dob,
         gender: user.gender,
-        roleId: user.roleId,
+        defaultRoleId: user.defaultRoleId,
       };
 
       // Type guard to handle UserModel-only fields
@@ -249,7 +249,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
         password: '',
         dob: formValue.dob,
         gender: formValue.gender,
-        roleId: formValue.roleId,
+        defaultRoleId: formValue.defaultRoleId,
         statusId: 1, // Default active status
       };
       return user;
@@ -259,9 +259,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
         email: formValue.email,
         password: formValue.password,
         contactNo: formValue.contactNo,
-        dob: formValue.dob,
-        gender: formValue.gender,
-        roleId: formValue.roleId,
+        defaultRoleId: formValue.defaultRoleId,
         profileImage: formValue.profileImage || '',
       };
       return newUser;
@@ -308,17 +306,17 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
   }
 
   private navigateBack(updatedId?: number): void {
-    this.router.navigate([`userRolePermission/dashboard/user`]);
+    this.router.navigate([`userRolePermission/users`]);
   }
 
   private navigateToClientForm(userData: any): void {
-    this.router.navigate(['/userRolePermission/dashboard/clientlist/create'], {
+    this.router.navigate(['/userRolePermission/users'], {
       queryParams: {
         userId: userData.id,
         name: userData.name,
         email: userData.email,
         contactNo: userData.contactNo,
-        parentRoute: '/userRolePermission/dashboard/user',
+        parentRoute: '/userRolePermission/users',
       },
     });
   }

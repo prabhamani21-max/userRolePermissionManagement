@@ -16,7 +16,7 @@ export class DashboardComponent {
       icon: 'mdi:account', // User dashboard
       iconColor: 'primary',
       title: 'User Dashboard',
-      path: '/admin/users',
+      path: '/userRolePermission/users',
       badgeColor: 'primary',
       badgeIcon: 'bx bx-user',
     },

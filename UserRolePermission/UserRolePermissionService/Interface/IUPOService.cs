@@ -15,5 +15,6 @@ namespace UserRolePermission.Service.Interface
         Task<UserPermissionOverride> GetUserPermissionOverrideByIdAsync(long id);
         Task<UserPermissionOverride> UpdateUserPermissionOverrideAsync(UserPermissionOverride userPermissionOverride);
         Task<(bool Success, string Message)> DeleteUserPermissionOverrideAsync(long id);
+        Task<List<int>> GetUserEffectivePermissionsAsync(long userId);
     }
 }

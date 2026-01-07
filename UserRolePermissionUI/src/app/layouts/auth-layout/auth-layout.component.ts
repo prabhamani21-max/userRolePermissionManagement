@@ -22,6 +22,7 @@ export class AuthLayoutComponent implements OnInit, OnDestroy {
   private renderer = inject(Renderer2)
 
   ngOnInit(): void {
+    console.log('AuthLayoutComponent ngOnInit called');
     this.renderer.addClass(document.body, 'authentication-bg')
   }
 

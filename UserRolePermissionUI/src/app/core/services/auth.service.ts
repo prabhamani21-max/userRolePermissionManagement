@@ -16,6 +16,7 @@ import { Role } from '../models/role.model';
 import { CreateUser } from '../models/user.model';
 import { PermissionService } from './permission.service';
 import { ScreenService } from './screen.service';
+import { UpoService } from './upo.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -27,7 +28,7 @@ export class AuthenticationService {
   public readonly authSessionKey = 'UserRolePermission_AUTH_TOKEN';
   public readonly decodedTokenKey = 'userDetails';
   public readonly userPermissionsKey = 'userPermissions';
-  constructor(private http: HttpClient, private permissionService: PermissionService, private screenService: ScreenService) {}
+  constructor(private http: HttpClient, private permissionService: PermissionService, private screenService: ScreenService, private upoService: UpoService) {}
 
   login(email: string, password: string) {
     return this.http
@@ -43,17 +44,17 @@ export class AuthenticationService {
            if (response.token) {
              const decoded = this.getDecodedToken();
              console.log('Decoded token in login:', decoded);
-             if (decoded && decoded.roleId) {
-               console.log('RoleId from decoded:', decoded.roleId);
-               const roleId = parseInt(decoded.roleId);
-               console.log('Parsed roleId:', roleId);
-               if (!isNaN(roleId)) {
-                 return this.permissionService.getAllRolePermissions(roleId, undefined, 1, 1, 1000).pipe(
-                   switchMap((permissionsResponse) => {
-                     console.log('Permissions response:', permissionsResponse);
+             if (decoded && decoded.userId) {
+               console.log('UserId from decoded:', decoded.userId);
+               const userId = parseInt(decoded.userId);
+               console.log('Parsed userId:', userId);
+               if (!isNaN(userId)) {
+                 return this.upoService.getUserEffectivePermissions(userId).pipe(
+                   switchMap((actionIds: number[]) => {
+                     console.log('Effective permissions response:', actionIds);
                      return this.screenService.getAllScreenActions().pipe(
                        map(() => {
-                         const permissions = permissionsResponse.items.map((p: any) => p.actionId.toString());
+                         const permissions = actionIds.map((id: number) => id.toString());
                          console.log('Mapped permissions:', permissions);
                          localStorage.setItem(this.userPermissionsKey, JSON.stringify(permissions));
                          return response;
@@ -130,10 +131,8 @@ export class AuthenticationService {
       const decoded = jwtDecode<CustomJwtPayload>(token);
       const mapped: DecodedToken = {
         userId: decoded[ClaimTypes.NAME_IDENTIFIER],
-        email: decoded[ClaimTypes.EMAIL],
-        name: decoded[ClaimTypes.NAME],
-        role: decoded[ClaimTypes.ROLE],
-        roleId: decoded.RoleId,
+        name:decoded[ClaimTypes.NAME],
+        roleId: decoded.DefaultRoleId,
         exp: decoded[ClaimTypes.EXPIRATION],};
       localStorage.setItem(this.decodedTokenKey, JSON.stringify(mapped));
       return mapped;

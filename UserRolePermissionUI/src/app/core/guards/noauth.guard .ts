@@ -12,7 +12,6 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
     console.log('noAuthGuard: not authenticated, allowing access');
     return true;
   }
-
   // Redirect to home or dashboard if already authenticated
   console.log('noAuthGuard: authenticated, redirecting to userRolePermission/admin');
   return router.parseUrl('userRolePermission/admin');

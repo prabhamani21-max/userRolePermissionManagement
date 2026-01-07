@@ -36,6 +36,7 @@ builder.Services.AddAutoMapper(config => config.AddMaps(typeof(AutoMapperProfile
 builder.Services.AddMemoryCache();
     // . Add Azure Communication Services Clients --
     builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
     builder.Services.AddScoped<IRoleRepository, RoleRepository>();
     builder.Services.AddScoped<IStatusRepository, StatusRepository>();
     builder.Services.AddScoped<IScreenRepository, ScreenRepository>();
@@ -59,6 +60,7 @@ builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
     builder.Services.AddScoped<IUserPublisherService, SignalRUserPublisher>();
 

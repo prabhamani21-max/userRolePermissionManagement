@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterOutlet } from '@angular/router'
 import { AuthenticationService } from './core/services/auth.service';
@@ -10,9 +10,15 @@ import { AuthenticationService } from './core/services/auth.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'userRolePermission';
-  constructor(public authService: AuthenticationService) {}
+  constructor(public authService: AuthenticationService) {
+    console.log('AppComponent constructor called');
+  }
+
+  ngOnInit() {
+    console.log('AppComponent ngOnInit called');
+  }
 
   // Optional getter to simplify template usage
   get isLoggedIn(): boolean {

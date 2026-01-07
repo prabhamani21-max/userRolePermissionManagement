@@ -22,6 +22,7 @@ namespace UserRolePermission.Authentication
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+         new Claim("DefaultRoleId", user.DefaultRoleId.ToString()),          // ✅ Use ClaimTypes.RoleId
             };
 
             foreach (var roleId in roleIds)

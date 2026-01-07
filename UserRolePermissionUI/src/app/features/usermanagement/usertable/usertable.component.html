@@ -19,8 +19,6 @@
           <tr>
             <th class="text-muted py-1">Name</th>
             <th class="text-muted py-1">Email</th>
-            <th class="text-muted py-1">Gender</th>
-            <th class="text-muted py-1">DOB</th>
             <th class="text-muted py-1">Contact No</th>
             <th class="text-muted py-1">Role</th>
             <th class="text-muted py-1">Action</th>
@@ -33,18 +31,9 @@
               <h5>{{ user.name }}</h5>
             </td>
             <td>{{ user.email }}</td>
-            <td>
-              {{
-                user.gender === 1
-                  ? "Male"
-                  : user.gender === 0
-                    ? "Female"
-                    : "Other"
-              }}
-            </td>
-            <td>{{ user.dob | date: "mediumDate" }}</td>
+        
             <td>{{ user.contactNo }}</td>
-            <td>{{ user.roleId | roleName: roles }}</td>
+            <td>{{ user.defaultRoleId | roleName: roles }}</td>
 
             <td>
               <button

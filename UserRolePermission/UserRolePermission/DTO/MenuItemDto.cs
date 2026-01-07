@@ -10,6 +10,8 @@ namespace UserRolePermission.DTO
         public string Link { get; set; }
         public bool Collapsed { get; set; } = true;
         public bool IsTitle { get; set; }
+        public string? RoutePath { get; set; }
+        public bool IsDefaultDashboard { get; set; } = false;
         public List<MenuItemDto> SubMenu { get; set; } = new();
     }
 }

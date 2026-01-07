@@ -128,55 +128,6 @@
                 <small>Checking contact number availability...</small>
               </div>
             </div>
-
-            <div class="mb-3">
-              <label class="form-label" for="dob"
-                >Date of Birth <span class="text-danger">*</span></label
-              >
-              <input
-                type="date"
-                id="dob"
-                formControlName="dob"
-                class="form-control"
-              />
-              <div
-                *ngIf="
-                  registerForm.get('dob')?.invalid &&
-                  (registerForm.get('dob')?.dirty ||
-                    registerForm.get('dob')?.touched)
-                "
-                class="text-danger"
-              >
-                <small *ngIf="registerForm.get('dob')?.errors?.['required']"
-                  >Date of birth is required</small
-                >
-              </div>
-            </div>
-
-            <!-- Dropdown Selections -->
-            <div class="mb-3">
-              <label class="form-label" for="gender"
-                >Gender <span class="text-danger">*</span></label
-              >
-              <select id="gender" formControlName="gender" class="form-select">
-                <option value="" disabled selected>Select Gender</option>
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </select>
-              <div
-                *ngIf="
-                  registerForm.get('gender')?.invalid &&
-                  (registerForm.get('gender')?.dirty ||
-                    registerForm.get('gender')?.touched)
-                "
-                class="text-danger"
-              >
-                <small *ngIf="registerForm.get('gender')?.errors?.['required']"
-                  >Gender is required</small
-                >
-              </div>
-            </div>
-
             <!-- Password Section -->
             <div class="mb-3">
               <label class="form-label" for="password"

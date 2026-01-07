@@ -18,9 +18,7 @@ export const ClaimTypes = {
  */
 export interface CustomJwtPayload extends JwtPayload {
   [ClaimTypes.NAME_IDENTIFIER]: string;
-  [ClaimTypes.EMAIL]: string;
   [ClaimTypes.NAME]: string;
-  [ClaimTypes.ROLE]: string;
   [ClaimTypes.EXPIRATION]: number;
-  RoleId: string;
+  DefaultRoleId: string;
 }

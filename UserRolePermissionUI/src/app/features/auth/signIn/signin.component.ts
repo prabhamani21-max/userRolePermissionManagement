@@ -11,6 +11,7 @@ import { AuthenticationService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { MenuService } from '../../../core/services/menu.service';
+import { MenuItem } from '../../../common/menu-meta';
 
 @Component({
   selector: 'app-signin',
@@ -31,6 +32,7 @@ export class SigninComponent {
   private menuService = inject(MenuService);
 
   ngOnInit(): void {
+    console.log('SigninComponent ngOnInit called');
     this.signInForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -39,6 +41,19 @@ export class SigninComponent {
 
   get formValues() {
     return this.signInForm.controls;
+  }
+
+  private findDefaultDashboard(menuItems: MenuItem[]): MenuItem | null {
+    for (const item of menuItems) {
+      if (item.isDefaultDashboard) {
+        return item;
+      }
+      if (item.subMenu) {
+        const found = this.findDefaultDashboard(item.subMenu);
+        if (found) return found;
+      }
+    }
+    return null;
   }
 
   login() {
@@ -51,21 +66,43 @@ export class SigninComponent {
 
       this.authService.login(email, password).subscribe({
         next: () => {
-          // Verify token is stored and decoded properly
-          const token = this.authService.token;
-          const decodedToken = this.authService.getDecodedToken();
-
-          // Navigate based on role
-          if (decodedToken && decodedToken.roleId) {
-            const roleId = parseInt(decodedToken.roleId);
-            if (roleId === 3) {
-              this.router.navigate(['/userRolePermission/HR']);
-            } else {
-              this.router.navigate(['/userRolePermission/admin']);
+          // Fetch sidebar menu to determine default dashboard
+          this.menuService.getSidebarMenu().subscribe({
+            next: (menuItems) => {
+              const defaultDashboard = this.findDefaultDashboard(menuItems);
+              if (defaultDashboard && defaultDashboard.link) {
+                this.router.navigate([defaultDashboard.link]);
+              // } else {
+              //   // Fallback to old logic if no default dashboard found
+              //   const decodedToken = this.authService.getDecodedToken();
+              //   if (decodedToken && decodedToken.roleId) {
+              //     const roleId = parseInt(decodedToken.roleId);
+              //     if (roleId === 3) {
+              //       this.router.navigate(['/userRolePermission/HR']);
+              //     } else {
+              //       this.router.navigate(['/userRolePermission/admin']);
+              //     }
+              //   } else {
+              //     this.router.navigate(['/userRolePermission/admin']);
+              //   }
+              }
+            },
+            error: (error) => {
+              console.error('Failed to load sidebar menu for navigation', error);
+              // Fallback to old logic on error
+              const decodedToken = this.authService.getDecodedToken();
+              if (decodedToken && decodedToken.roleId) {
+                const roleId = parseInt(decodedToken.roleId);
+                if (roleId === 3) {
+                  this.router.navigate(['/userRolePermission/HR']);
+                } else {
+                  this.router.navigate(['/userRolePermission/admin']);
+                }
+              } else {
+                this.router.navigate(['/userRolePermission/admin']);
+              }
             }
-          } else {
-            this.router.navigate(['/userRolePermission/admin']);
-          }
+          });
         },
         error: (error) => {
           this.isLoading = false;
